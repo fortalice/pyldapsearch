@@ -7,6 +7,7 @@ from impacket.spnego import SPNEGO_NegTokenInit, TypesMech
 from impacket.examples.utils import parse_credentials
 from impacket.examples import logger
 from impacket import version
+from pyldapsearch import __version__
 from binascii import unhexlify
 from ldap3 import ANONYMOUS
 import base64
@@ -394,6 +395,8 @@ def main(
 
     print(version.BANNER)
     logger.init()
+
+    logging.info(f'pyldapsearch v{__version__} - Fortalice ✪\n')
 
     domain, username, password = parse_credentials(target)
     
