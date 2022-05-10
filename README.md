@@ -93,3 +93,7 @@ cd pyldapsearch
 poetry install
 poetry run pyldapsearch
 ```
+
+## References
+- ldapsearch ([CS-Situational-Awareness-BOF](https://github.com/trustedsec/cs-situational-awareness-bof))
+- [ldapconsole](https://github.com/p0dalirius/ldapconsole)
