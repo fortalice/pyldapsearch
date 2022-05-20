@@ -18,7 +18,7 @@ pip3 install pyldapsearch
 ## Usage
 ```
 Usage: pyldapsearch [OPTIONS] TARGET FILTER
-  
+
   Tool for issuing manual LDAP queries which offers bofhound compatible output
 
 Arguments:
@@ -44,6 +44,9 @@ Options:
   -aesKey TEXT           AES key to use for Kerberos Authentication (128 or
                          256 bits)
   -ldaps                 Use LDAPS instead of LDAP
+  -no-smb                Do not make a SMB connection to the DC to get its
+                         hostname (useful for -k). Requires a hostname to be
+                         provided with -dc-ip
   -silent                Do not print query results to console (results will
                          still be logged)
   --help                 Show this message and exit.
