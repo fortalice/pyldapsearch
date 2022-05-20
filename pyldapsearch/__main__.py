@@ -47,7 +47,6 @@ def get_machine_name(domain_controller, domain):
 def init_ldap_connection(target, tls_version, domain, username, password, lmhash, nthash, domain_controller, kerberos, hashes, aesKey):
     user = '%s\\%s' % (domain, username)
     if tls_version is not None:
-        logging.debug('Targeting LDAPS')
         use_ssl = True
         port = 636
         tls = ldap3.Tls(validate=ssl.CERT_NONE, version=tls_version)
@@ -74,9 +73,13 @@ def init_ldap_connection(target, tls_version, domain, username, password, lmhash
     return ldap_server, ldap_session
 
 
-def init_ldap_session(domain, username, password, lmhash, nthash, kerberos, domain_controller, ldaps, hashes, aesKey):
+def init_ldap_session(domain, username, password, lmhash, nthash, kerberos, domain_controller, ldaps, hashes, aesKey, no_smb):
     if kerberos:
-        target = get_machine_name(domain_controller, domain)
+        if no_smb:
+            logging.debug(f'Setting connection target to {domain_controller} without SMB connection')
+            target = domain_controller
+        else:
+            target = get_machine_name(domain_controller, domain)
     else:
         if domain_controller is not None:
             target = domain_controller
@@ -388,6 +391,8 @@ def main(
                                         'line'),
     aesKey: str = typer.Option(None, '-aesKey', help='AES key to use for Kerberos Authentication (128 or 256 bits)'),
     ldaps: bool = typer.Option(False, '-ldaps', help='Use LDAPS instead of LDAP'),
+    no_smb: bool = typer.Option(False, '-no-smb', help='Do not make a SMB connection to the DC to get its hostname (useful for -k). '
+                                        'Requires a hostname to be provided with -dc-ip'),
     silent: bool = typer.Option(False, '-silent', help='Do not print query results to console (results will still be logged)')):
     '''
     Tool for issuing manual LDAP queries which offers bofhound compatible output
@@ -447,12 +452,12 @@ def main(
     try:
         ldap_server, ldap_session = init_ldap_session(domain=domain, username=username, password=password, lmhash=lm_hash, 
                                                         nthash=nt_hash, kerberos=kerberos, domain_controller=domain_controller, 
-                                                        ldaps=ldaps, hashes=hashes, aesKey=aesKey)
+                                                        ldaps=ldaps, hashes=hashes, aesKey=aesKey, no_smb=no_smb)
         ldapsearch = Ldapsearch(ldap_server, ldap_session, filter, attributes, result_count, search_base, no_sd, logs_dir, silent)
         logging.debug('LDAP bind successful')
     except ldap3.core.exceptions.LDAPSocketOpenError as e: 
         if 'invalid server address' in str(e):
-            logging.critical('Invalid server address - {domain')
+            logging.critical(f'Invalid server address - {domain_controller}')
         else:
             logging.critical('Error connecting to LDAP server')
             print()
