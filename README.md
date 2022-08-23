@@ -88,6 +88,11 @@ Perform a query using an anonymous bind
 pyldapsearch 'ez.lab'/'':'' '(objectClass=*)'
 ```
 
+Perform a query across a domain trust
+```
+pyldapsearch ez.lab/administrator:pass '(objectClass=*)' -base-dn 'DC=otherdomain,DC=local' -dc-ip 10.1.4.20
+```
+
 ## Development
 pyldapsearch uses Poetry to manage dependencies. Install from source and setup for development with:
 ```shell
