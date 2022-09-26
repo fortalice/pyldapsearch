@@ -16,41 +16,7 @@ pip3 install pyldapsearch
 ```
 
 ## Usage
-```
-Usage: pyldapsearch [OPTIONS] TARGET FILTER
-
-  Tool for issuing manual LDAP queries which offers bofhound compatible output
-
-Arguments:
-  TARGET  [[domain/]username[:password]  [required]
-  FILTER  LDAP filter string  [required]
-
-Options:
-  -attributes TEXT       Comma separated list of attributes
-  -limit INTEGER         Limit the number of results to return  [default: 0]
-  -dc-ip TEXT            Domain controller IP or hostname to query
-  -base-dn TEXT          Search base distinguished name to use. Default is
-                         base domain level
-  -no-sd                 Do not add nTSecurityDescriptor as an attribute
-                         queried by default. Reduces console output
-                         significantly
-  -debug                 Turn DEBUG output ON
-  -hashes LMHASH:NTHASH  NTLM hashes, format is LMHASH:NTHASH
-  -no-pass               Don't ask for password (useful for -k)
-  -k                     Use Kerberos authentication. Grabs credentials from
-                         ccache file (KRB5CCNAME) based on target parameters.
-                         If valid credentials cannot be found, it will use the
-                         ones specified in the command line
-  -aesKey TEXT           AES key to use for Kerberos Authentication (128 or
-                         256 bits)
-  -ldaps                 Use LDAPS instead of LDAP
-  -no-smb                Do not make a SMB connection to the DC to get its
-                         hostname (useful for -k). Requires a hostname to be
-                         provided with -dc-ip
-  -silent                Do not print query results to console (results will
-                         still be logged)
-  --help                 Show this message and exit.
-```
+![](.github/help.png)
 
 ## Examples
 Query all the data - if you intend to do this, just run BloodHound :)

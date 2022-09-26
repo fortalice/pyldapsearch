@@ -313,7 +313,7 @@ class Ldapsearch:
                 self.ldap_session.extend.standard.paged_search(self.search_base, self.query_string, attributes=self.attributes, size_limit=self.result_count, controls=controls, paged_size=500, generator=False)
             else:
                 self.ldap_session.extend.standard.paged_search(self.search_base, self.query_string, attributes=self.attributes, size_limit=self.result_count, paged_size=500, generator=False)
-        except ldap3.core.exceptions.LDAPAttributeError as e:
+        except (ldap3.core.exceptions.LDAPAttributeError, ldap3.core.exceptions.LDAPInvalidFilterError) as e:
             print()
             logging.critical(f'Error: {str(e)}')
             exit()
@@ -377,23 +377,25 @@ app = typer.Typer(add_completion=False)
 def main(
     target: str = typer.Argument(..., help='[[domain/]username[:password]'),
     filter: str = typer.Argument(..., help='LDAP filter string'),
-    attributes: str = typer.Option('', '-attributes', help='Comma separated list of attributes'),
-    result_count: int = typer.Option(0, '-limit', help='Limit the number of results to return'),
-    domain_controller: str = typer.Option('', '-dc-ip', help='Domain controller IP or hostname to query'),
-    distinguished_name: str = typer.Option('', '-base-dn', help='Search base distinguished name to use. Default is base domain level'),
-    no_sd: bool = typer.Option(False, '-no-sd', help='Do not add nTSecurityDescriptor as an attribute queried by default. Reduces console output significantly'),
+    attributes: str = typer.Option('', '-attributes', help='Comma separated list of attributes', rich_help_panel='Search Options'),
+    result_count: int = typer.Option(0, '-limit', help='Limit the number of results to return', rich_help_panel='Search Options'),
+    domain_controller: str = typer.Option('', '-dc-ip', help='Domain controller IP or hostname to query', rich_help_panel='Connection Options'),
+    distinguished_name: str = typer.Option('', '-base-dn', help='Search base distinguished name to use. Default is base domain level', rich_help_panel='Search Options'),
+    no_sd: bool = typer.Option(False, '-no-sd', help='Do not add nTSecurityDescriptor as an attribute queried by default. Reduces console output significantly', rich_help_panel='Search Options'),
     debug: bool = typer.Option(False, '-debug', help='Turn DEBUG output ON'),
-    hashes: str = typer.Option(None, '-hashes', metavar="LMHASH:NTHASH", help='NTLM hashes, format is LMHASH:NTHASH'),
-    no_pass: bool = typer.Option(False, '-no-pass', help='Don\'t ask for password (useful for -k)'),
+    hashes: str = typer.Option(None, '-hashes', metavar="LMHASH:NTHASH", help='NTLM hashes, format is LMHASH:NTHASH', rich_help_panel='Connection Options'),
+    no_pass: bool = typer.Option(False, '-no-pass', help='Don\'t ask for password (useful for -k)', rich_help_panel='Connection Options',),
     kerberos: bool = typer.Option(False, '-k', help='Use Kerberos authentication. Grabs credentials from ccache file '
                                         '(KRB5CCNAME) based on target parameters. If valid credentials '
                                         'cannot be found, it will use the ones specified in the command '
-                                        'line'),
-    aesKey: str = typer.Option(None, '-aesKey', help='AES key to use for Kerberos Authentication (128 or 256 bits)'),
-    ldaps: bool = typer.Option(False, '-ldaps', help='Use LDAPS instead of LDAP'),
+                                        'line',
+                                        rich_help_panel='Connection Options'),
+    aesKey: str = typer.Option(None, '-aesKey', help='AES key to use for Kerberos Authentication (128 or 256 bits)', rich_help_panel='Connection Options'),
+    ldaps: bool = typer.Option(False, '-ldaps', help='Use LDAPS instead of LDAP', rich_help_panel='Connection Options',),
     no_smb: bool = typer.Option(False, '-no-smb', help='Do not make a SMB connection to the DC to get its hostname (useful for -k). '
-                                        'Requires a hostname to be provided with -dc-ip'),
-    silent: bool = typer.Option(False, '-silent', help='Do not print query results to console (results will still be logged)')):
+                                        'Requires a hostname to be provided with -dc-ip',
+                                        rich_help_panel='Connection Options'),
+    silent: bool = typer.Option(False, '-silent', help='Do not print query results to console (results will still be logged)', rich_help_panel='Search Options')):
     '''
     Tool for issuing manual LDAP queries which offers bofhound compatible output
     '''

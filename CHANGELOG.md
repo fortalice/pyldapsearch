@@ -1,4 +1,12 @@
 # Changelog
+## [v0.1.2] - 9/26/2022
+## Fixed
+- LDAPInvalidFilterError is now caught
+
+## Changed
+- Improved help menus
+- Updated dependencies
+
 ## [v0.1.1] - 6/22/2022
 ## Changed
 - Updated dependencies
