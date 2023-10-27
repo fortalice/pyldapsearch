@@ -1,3 +1,6 @@
+# THIS REPO IS NO LONGER ACTIVE
+⛔🚧 This repo is no longer maintained. To submit an issue, pull request, or obtain the lastest version, reference [https://github.com/Tw1sm/pyldapsearch](https://github.com/Tw1sm/pyldapsearch) 🚧⛔
+
 # pyldapsearch
 
 This is designed to be a python "port" of the ldapsearch BOF by TrustedSec, which is a part of this [repo](https://github.com/trustedsec/CS-Situational-Awareness-BOF).
